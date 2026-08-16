@@ -1,10 +1,14 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getAdminClient, type LegacyTag } from "@/lib/supabase-admin";
+import { getSessionEmail } from "@/lib/supabase-auth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScanAudit from "@/components/ScanAudit";
 
 export const dynamic = "force-dynamic";
+
+// Where owners manage their items (the main site). Overridable via env.
+const MANAGE_ORIGIN = process.env.NEXT_PUBLIC_MANAGE_ORIGIN || "https://securetag.in";
 
 async function getTag(code: string): Promise<LegacyTag | null> {
   const db = getAdminClient();
@@ -43,6 +47,17 @@ export default async function FoundPage({ params }: { params: { code: string } }
 
   const tag = await getTag(code);
   if (!tag) notFound();
+
+  /* ---------- OWNER logged in (scanning their own tag) ----------
+     Reproduces the old behaviour: an owner scanning their own tag is sent to
+     their manage view on the main site; everyone else sees the finder page.
+     Session is shared across .securetag.in, matched by verified email. */
+  if (tag.claimed && tag.email) {
+    const sessionEmail = await getSessionEmail();
+    if (sessionEmail && sessionEmail === tag.email.trim().toLowerCase()) {
+      redirect(`${MANAGE_ORIGIN}/dashboard/legacy-item/${code}/edit`);
+    }
+  }
 
   /* ---------- BLANK / not activated ---------- */
   if (!tag.claimed) {
