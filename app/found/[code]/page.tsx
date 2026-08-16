@@ -1,142 +1,146 @@
 import { notFound } from "next/navigation";
 import { getAdminClient, type LegacyTag } from "@/lib/supabase-admin";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import ScanAudit from "@/components/ScanAudit";
 
 export const dynamic = "force-dynamic";
 
 async function getTag(code: string): Promise<LegacyTag | null> {
   const db = getAdminClient();
-  // Codes are case-sensitive; match exactly.
-  const { data } = await db
-    .from("legacy_tags")
-    .select("*")
-    .eq("id", code)
-    .maybeSingle();
+  const { data } = await db.from("legacy_tags").select("*").eq("id", code).maybeSingle();
   return (data as LegacyTag) ?? null;
 }
 
-function phones(tag: LegacyTag): string[] {
-  return [tag.phone, tag.alt_phone].filter(Boolean) as string[];
+function PhoneIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+function MailIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-10 5L2 7" />
+    </svg>
+  );
 }
 
-export default async function FoundPage({
-  params,
-}: {
-  params: { code: string };
-}) {
-  const code = params.code;
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <Header />
+      <main className="st-main">{children}</main>
+      <Footer />
+    </>
+  );
+}
 
-  // Old system accepted exactly 6 alphanumeric chars.
+export default async function FoundPage({ params }: { params: { code: string } }) {
+  const code = params.code;
   if (!/^[a-zA-Z0-9]{6}$/.test(code)) notFound();
 
   const tag = await getTag(code);
   if (!tag) notFound();
 
-  /* ---------- BLANK / never registered ---------- */
+  /* ---------- BLANK / not activated ---------- */
   if (!tag.claimed) {
     return (
-      <main className="wrap">
-        <div className="card">
-          <div className="brand"><span className="dot" /> SecureTag</div>
-          <span className="badge blank">Not activated</span>
-          <h1>This tag isn&apos;t registered yet</h1>
-          <p className="sub">
-            This SecureTag is genuine but hasn&apos;t been activated by an owner.
-            If it&apos;s yours, register it to start protecting your item.
+      <Shell>
+        <div className="st-card">
+          <span className="st-badge blank"><span className="d" /> Not activated</span>
+          <h1 className="font-display">Activate your new tag</h1>
+          <p className="st-lead">
+            This is a genuine SecureTag, but it hasn&apos;t been activated yet. If it&apos;s
+            yours, sign in or register to link it to your item.
           </p>
-          <a className="btn" href="https://securetag.in">Activate at securetag.in</a>
-          <div className="foot">
-            Questions? <a href="mailto:support@securetag.in">support@securetag.in</a>
+          <div className="st-btn-row">
+            <a className="st-btn" href="https://securetag.in">Sign in</a>
+            <a className="st-btn ghost" href="https://securetag.in">Register</a>
           </div>
+          <div className="st-note">Questions? <a href="mailto:support@securetag.in">support@securetag.in</a></div>
         </div>
-      </main>
+      </Shell>
     );
   }
 
   const pref = (tag.pref_contact || "").toUpperCase();
   const showPhone = pref === "" || pref.includes("PHONE");
   const showEmail = pref === "" || pref.includes("EMAIL");
-  const phoneList = showPhone ? phones(tag) : [];
+  const phoneList = (showPhone ? [tag.phone, tag.alt_phone] : []).filter(Boolean) as string[];
   const email = showEmail ? tag.email : null;
 
-  /* ---------- SECURED (owner has NOT flagged it lost) ----------
-     Matches the legacy privacy rule: when the item is not in LOST mode,
-     we do not expose the owner's contact details — we route through support. */
+  /* ---------- SECURED (registered, not in lost mode) ---------- */
   if (!tag.lost_mode) {
     return (
-      <main className="wrap">
-        <div className="card">
-          <div className="brand"><span className="dot" /> SecureTag</div>
-          <span className="badge secured">Secured</span>
-          <div className="item">Item</div>
-          <div className="item-name">{tag.item_name || "SecureTag item"}</div>
-          <p className="sub">
-            This item is registered and secured with its owner. To help return
-            it, contact our team and we&apos;ll reach the owner for you.
+      <Shell>
+        <ScanAudit code={code} />
+        <div className="st-card">
+          <span className="st-badge secured"><span className="d" /> Secured</span>
+          <p className="st-item-label">Item</p>
+          <div className="st-item-name font-display">{tag.item_name || "SecureTag item"}</div>
+          <p className="st-lead">
+            This item is registered and secured with its owner. To help return it, contact
+            our team and we&apos;ll reach the owner on your behalf.
           </p>
-          <a className="btn" href={`mailto:support@securetag.in?subject=${encodeURIComponent(`Found SecureTag item (${code})`)}`}>
+          <a
+            className="st-btn"
+            href={`mailto:support@securetag.in?subject=${encodeURIComponent(`Found SecureTag item (${code})`)}`}
+          >
             Contact SecureTag support
           </a>
-          <div className="foot">support@securetag.in</div>
+          <div className="st-note">support@securetag.in</div>
         </div>
-      </main>
+      </Shell>
     );
   }
 
-  /* ---------- LOST MODE (owner wants to be reached directly) ---------- */
+  /* ---------- LOST MODE — reveal owner contact ---------- */
   const mailto =
     email &&
-    `mailto:${email}?subject=${encodeURIComponent(
-      `SecureTag item found: ${tag.item_name || ""}`.trim()
-    )}&body=${encodeURIComponent(
-      "Hi, I found your item with a SecureTag. Please reach out so we can arrange a handover. Thank you!"
-    )}`;
+    `mailto:${email}?subject=${encodeURIComponent(`SecureTag item found: ${tag.item_name || ""}`.trim())}` +
+      `&body=${encodeURIComponent("Hi, I found your item with a SecureTag. Please reach out so we can arrange a handover. Thank you!")}`;
 
   return (
-    <main className="wrap">
-      <div className="card">
-        <div className="brand"><span className="dot" /> SecureTag</div>
-        <span className="badge lost">Reported lost</span>
-        <h1>Please contact the owner</h1>
-        <p className="sub">
-          You&apos;ve found a lost item protected by SecureTag. The owner is
-          hoping to hear from you — please use the details below.
+    <Shell>
+      <ScanAudit code={code} />
+      <div className="st-card">
+        <span className="st-badge lost"><span className="d" /> Reported lost</span>
+        <h1 className="font-display">Please contact the owner</h1>
+        <p className="st-lead">
+          You&apos;ve found a lost item protected by SecureTag. The owner is hoping to hear
+          from you — please use the details below to reach them.
         </p>
 
-        <div className="item">Item</div>
-        <div className="item-name">{tag.item_name || "SecureTag item"}</div>
+        <p className="st-item-label">Item</p>
+        <div className="st-item-name font-display">{tag.item_name || "SecureTag item"}</div>
 
-        {phoneList.map((num) => (
-          <div className="row" key={num}>
-            <span className="label">Call the owner</span>
-            <a className="value" href={`tel:${num}`} style={{ color: "var(--brand)", textDecoration: "none" }}>
-              {num}
-            </a>
-          </div>
-        ))}
-
-        {email && (
-          <div className="row">
-            <span className="label">Email the owner</span>
-            <a className="value" href={mailto!} style={{ color: "var(--brand)", textDecoration: "none" }}>
-              {email}
-            </a>
-          </div>
-        )}
+        <ul className="st-contact">
+          {phoneList.map((num) => (
+            <li key={num}>
+              <span className="k"><span className="ic"><PhoneIcon /></span> Call the owner</span>
+              <a className="v" href={`tel:${num}`}>{num}</a>
+            </li>
+          ))}
+          {email && (
+            <li>
+              <span className="k"><span className="ic"><MailIcon /></span> Email the owner</span>
+              <a className="v" href={mailto!}>{email}</a>
+            </li>
+          )}
+        </ul>
 
         {phoneList.length === 0 && !email && (
-          <p className="sub">
+          <p className="st-lead" style={{ marginTop: 16 }}>
             The owner hasn&apos;t shared direct contact details. Please reach{" "}
-            <a href="mailto:support@securetag.in" style={{ color: "var(--brand)" }}>
-              support@securetag.in
-            </a>{" "}
+            <a href="mailto:support@securetag.in" style={{ color: "var(--indigo-600)" }}>support@securetag.in</a>{" "}
             and we&apos;ll connect you.
           </p>
         )}
 
-        <div className="foot">
-          Powered by SecureTag · <a href="mailto:support@securetag.in">support@securetag.in</a>
-        </div>
+        <div className="st-note">Powered by SecureTag · <a href="mailto:support@securetag.in">support@securetag.in</a></div>
       </div>
-    </main>
+    </Shell>
   );
 }

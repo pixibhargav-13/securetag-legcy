@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 288 288">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: url(#linear-gradient-3);
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        fill: none;
+        isolation: isolate;
+        opacity: .1;
+        stroke-width: 1.5px;
+      }
+
+      .cls-2 {
+        stroke: url(#linear-gradient-4);
+      }
+
+      .cls-3 {
+        stroke: url(#linear-gradient-2);
+      }
+
+      .cls-5 {
+        fill: rgba(54, 98, 227, .1);
+        stroke: #3662e3;
+        stroke-width: 2px;
+      }
+
+      .cls-4 {
+        stroke: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="376" y1="2.5" x2="-69" y2="2.5" gradientTransform="translate(0 290) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stopColor="#0f172a" stopOpacity="0"/>
+      <stop offset=".26" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset=".52" stopColor="#0f172a"/>
+      <stop offset=".78" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset="1" stopColor="#0f172a" stopOpacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="376" y1="290" x2="-69" y2="290" gradientTransform="translate(0 290) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stopColor="#0f172a" stopOpacity="0"/>
+      <stop offset=".26" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset=".52" stopColor="#0f172a"/>
+      <stop offset=".78" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset="1" stopColor="#0f172a" stopOpacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1=".25" y1="380" x2=".25" y2="-65" gradientTransform="translate(0 290) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stopColor="#0f172a" stopOpacity="0"/>
+      <stop offset=".26" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset=".52" stopColor="#0f172a"/>
+      <stop offset=".78" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset="1" stopColor="#0f172a" stopOpacity="0"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="287.75" y1="380" x2="287.75" y2="-65" gradientTransform="translate(0 290) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stopColor="#0f172a" stopOpacity="0"/>
+      <stop offset=".26" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset=".52" stopColor="#0f172a"/>
+      <stop offset=".78" stopColor="#0f172a" stopOpacity=".6"/>
+      <stop offset="1" stopColor="#0f172a" stopOpacity="0"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <path class="cls-4" d="M-69,287.5h445"/>
+    <path class="cls-3" d="M-69,0h445"/>
+    <path class="cls-1" d="M.25,355V-90"/>
+    <path class="cls-2" d="M287.75,355V-90"/>
+  </g>
+  <path class="cls-5" d="M200.74,47.33c1.19,1.38,2.2,2.9,3.03,4.52l30.39,59.63c.27.44.58.99.84,1.67v.02c.12.3.22.63.31.98,1.67,6.99,0,12.58-1.85,17.12h0c-14.09,34.44-28.11,68.87-41.67,102.34-2.02,4.99-4.94,10.56-11.34,14.12l-.63.35-5.14,1.76-.72.11c-1.31.19-2.59.28-3.84.28-5.56,0-10.57-1.74-14.85-3.55-6.48-2.73-13.13-5.43-19.57-8.03-2.74-1.11-5.48-2.22-8.22-3.34l-18.23-7.44c-13.53-5.52-27.07-11.04-40.59-16.58-13.65-5.59-19.94-18.55-14.97-30.83,13.74-33.92,28.33-69.75,43.37-106.51,2.71-6.62,8.1-11.62,15.19-14.08,19.68-6.84,39.74-13.67,59.13-20.28l1.02-.35c7.65-2.61,15.24-1.76,21.95,2.46,2.37,1.49,4.14,3.27,5.7,4.83l.68.79ZM181,53.85c-1.09,0-2.21.2-3.41.61l-1.02.35c-19.37,6.6-39.41,13.43-59.04,20.25-2.79.97-4.62,2.6-5.59,4.99-15.03,36.74-29.61,72.56-43.35,106.46-1.89,4.67,1.94,8.19,6.16,9.91,13.52,5.54,27.04,11.05,40.57,16.57l18.23,7.44c2.73,1.11,5.46,2.22,8.19,3.33,6.48,2.63,13.19,5.35,19.77,8.11,3.62,1.52,6.64,2.5,9.46,2.25l2.15-.74c1.43-.98,2.47-2.6,3.77-5.81,13.57-33.49,27.6-67.94,41.69-102.39h0c1.12-2.74,1.81-4.59,1.28-6.31-.08-.27-.27-.53-.39-.84l-29.83-58.74c-.35-.49-.58-.91-.96-1.42-.89-1.19-2.04-2.05-2.86-2.56-1.56-.98-3.13-1.47-4.81-1.47Z"/>
+</svg>
