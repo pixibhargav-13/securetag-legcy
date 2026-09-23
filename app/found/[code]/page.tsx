@@ -71,8 +71,9 @@ export default async function FoundPage({ params }: { params: { code: string } }
             yours, sign in or register to link it to your item.
           </p>
           <div className="st-btn-row">
-            <a className="st-btn" href="https://securetag.in">Sign in</a>
-            <a className="st-btn ghost" href="https://securetag.in">Register</a>
+            {/* Activation lives on the main site (login + dashboard are there);
+                it asks for sign-in/registration itself, then shows the form. */}
+            <a className="st-btn" href={`${MANAGE_ORIGIN}/legacy/activate/${code}`}>Activate this tag</a>
           </div>
           <div className="st-note">Questions? <a href="mailto:support@securetag.in">support@securetag.in</a></div>
         </div>
