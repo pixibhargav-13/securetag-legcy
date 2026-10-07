@@ -61,27 +61,11 @@ export default async function FoundPage({ params }: { params: { code: string } }
     }
   }
 
-  /* ---------- BLANK / not activated ---------- */
-  if (!tag.claimed) {
-    return (
-      <Shell>
-        <div className="st-card">
-          <span className="st-badge blank"><span className="d" /> Not activated</span>
-          <h1 className="font-display">Activate your new tag</h1>
-          <p className="st-lead">
-            This is a genuine SecureTag, but it hasn&apos;t been activated yet. If it&apos;s
-            yours, sign in or register to link it to your item.
-          </p>
-          <div className="st-btn-row">
-            {/* Activation lives on the main site (login + dashboard are there);
-                it asks for sign-in/registration itself, then shows the form. */}
-            <a className="st-btn" href={`${MANAGE_ORIGIN}/legacy/activate/${code}`}>Activate this tag</a>
-          </div>
-          <div className="st-note">Questions? <a href="mailto:support@securetag.in">support@securetag.in</a></div>
-        </div>
-      </Shell>
-    );
-  }
+  /* ---------- BLANK / not activated ----------
+     Straight to activation on the main site, which asks the person to log in
+     or register and then returns them to the activation form for this code
+     (the old app's /activate/<code> step). */
+  if (!tag.claimed) redirect(`${MANAGE_ORIGIN}/legacy/activate/${code}`);
 
   const pref = (tag.pref_contact || "").toUpperCase();
   const showPhone = pref === "" || pref.includes("PHONE");
