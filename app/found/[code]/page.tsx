@@ -12,7 +12,9 @@ const MANAGE_ORIGIN = process.env.NEXT_PUBLIC_MANAGE_ORIGIN || "https://secureta
 
 async function getTag(code: string): Promise<LegacyTag | null> {
   const db = getAdminClient();
-  const { data } = await db.from("legacy_tags").select("*").eq("id", code).maybeSingle();
+  const { data, error } = await db.from("legacy_tags").select("*").eq("id", code).maybeSingle();
+  // A DB outage must show as an error, not as "this tag doesn't exist".
+  if (error) throw new Error(`Could not load tag: ${error.message}`);
   return (data as LegacyTag) ?? null;
 }
 
@@ -131,6 +133,7 @@ export default async function FoundPage({ params }: { params: { code: string } }
 
         <p className="st-item-label">Item</p>
         <div className="st-item-name font-display">{tag.item_name || "SecureTag item"}</div>
+        {tag.message && <p className="st-lead st-owner-msg">&ldquo;{tag.message}&rdquo;</p>}
 
         <ul className="st-contact">
           {phoneList.map((num) => (
